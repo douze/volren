@@ -1,5 +1,6 @@
-import './style.css'
-import { Engine, Scene, ArcRotateCamera, Vector3, HemisphericLight, Mesh, MeshBuilder } from "@babylonjs/core";
+import { ArcRotateCamera, Engine, HemisphericLight, Mesh, MeshBuilder, Scene, Vector3, Color3 } from "@babylonjs/core";
+import { GradientMaterial } from "@babylonjs/materials";
+import './style.css';
 
 class App {
   constructor() {
@@ -15,10 +16,15 @@ class App {
     const light: HemisphericLight = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
     light.intensity = 0.7;
 
-    const sphere: Mesh = MeshBuilder.CreateSphere("sphere", { diameter: 2, segments: 32 }, scene);
-    sphere.position.y = 1;
+    const box: Mesh = MeshBuilder.CreateBox("box", { size: 5 }, scene);
 
-    MeshBuilder.CreateGround("ground", { width: 6, height: 6 }, scene);
+    const material = new GradientMaterial("grad", scene);
+    material.topColor = Color3.Red(); // Set the gradient top color
+    material.bottomColor = Color3.Blue(); // Set the gradient bottom color
+    material.offset = 0.5;
+    material.cullBackFaces = false;
+
+    box.material = material;
 
     engine.runRenderLoop(() => {
       scene.render();

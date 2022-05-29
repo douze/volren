@@ -2,11 +2,13 @@ lockfileVersion: 5.4
 
 specifiers:
   '@babylonjs/core': ^5.8.0
+  '@babylonjs/materials': ^5.8.0
   typescript: ^4.5.4
   vite: ^2.9.9
 
 devDependencies:
   '@babylonjs/core': 5.8.0
+  '@babylonjs/materials': 5.8.0
   typescript: 4.7.2
   vite: 2.9.9
 
@@ -15,6 +17,13 @@ packages:
   /@babylonjs/core/5.8.0:
     resolution: {integrity: sha512-1/p2XxuwoGStoEc0Nh0O4iBrSfWpRAYzkWXRqxjTqD/CU1bufZuHFLlBQp6GuVei33RU/yGjVI/W5d/rhSIXYA==}
     dependencies:
+      tslib: 2.4.0
+    dev: true
+
+  /@babylonjs/materials/5.8.0:
+    resolution: {integrity: sha512-jXP6xFzhctt3zi7JSpLN0FM38P/BO6xfWFN+odnCcA+RZm66Pm9QhcCU3m6vbn/8fZuj3/u2HUve0LusdBr9XQ==}
+    dependencies:
+      '@babylonjs/core': 5.8.0
       tslib: 2.4.0
     dev: true
 
