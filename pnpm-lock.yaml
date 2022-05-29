@@ -1,14 +1,22 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@babylonjs/core': ^5.8.0
   typescript: ^4.5.4
   vite: ^2.9.9
 
 devDependencies:
+  '@babylonjs/core': 5.8.0
   typescript: 4.7.2
   vite: 2.9.9
 
 packages:
+
+  /@babylonjs/core/5.8.0:
+    resolution: {integrity: sha512-1/p2XxuwoGStoEc0Nh0O4iBrSfWpRAYzkWXRqxjTqD/CU1bufZuHFLlBQp6GuVei33RU/yGjVI/W5d/rhSIXYA==}
+    dependencies:
+      tslib: 2.4.0
+    dev: true
 
   /esbuild-android-64/0.14.42:
     resolution: {integrity: sha512-P4Y36VUtRhK/zivqGVMqhptSrFILAGlYp0Z8r9UQqHJ3iWztRCNWnlBzD9HRx0DbueXikzOiwyOri+ojAFfW6A==}
@@ -291,6 +299,10 @@ packages:
   /supports-preserve-symlinks-flag/1.0.0:
     resolution: {integrity: sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w==}
     engines: {node: '>= 0.4'}
+    dev: true
+
+  /tslib/2.4.0:
+    resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
     dev: true
 
   /typescript/4.7.2:
