@@ -2,12 +2,14 @@ lockfileVersion: 5.4
 
 specifiers:
   '@babylonjs/core': ^5.8.0
+  '@babylonjs/inspector': ^5.8.2
   '@babylonjs/materials': ^5.8.0
   typescript: ^4.5.4
   vite: ^2.9.9
 
 devDependencies:
   '@babylonjs/core': 5.8.0
+  '@babylonjs/inspector': 5.8.2
   '@babylonjs/materials': 5.8.0
   typescript: 4.7.2
   vite: 2.9.9
@@ -20,11 +22,108 @@ packages:
       tslib: 2.4.0
     dev: true
 
+  /@babylonjs/core/5.8.2:
+    resolution: {integrity: sha512-GhvMQOvYqR9qOgv1mxcyCnmGN/VcT0kexHoKEmru3uNJvFpsJDRYQdFyyMkVPKnreCG8q1kbUohz7aynz6WV0Q==}
+    dependencies:
+      tslib: 2.4.0
+    dev: true
+
+  /@babylonjs/gui-editor/5.8.2:
+    resolution: {integrity: sha512-HP2fp95RFSbIx9H1ON1gSimR1h+ic6o0FGspkxHxKvkw/OvQ8sav7IKLIbsqIGdaQXjfoLRfuQutula6mssIxA==}
+    peerDependencies:
+      '@types/react': '>=16.7.3'
+      '@types/react-dom': '>=16.0.9'
+    dependencies:
+      '@babylonjs/core': 5.8.2
+      '@babylonjs/gui': 5.8.2
+    dev: true
+
+  /@babylonjs/gui/5.8.2:
+    resolution: {integrity: sha512-t6OaCebxxZFsz2sLxpQ9vBN8637cjV4CZ5r2gi13piZsSD14T7CZQZ4JUPSxIWTa/CZRKq19Jc0quZqeoHXh2A==}
+    dependencies:
+      '@babylonjs/core': 5.8.2
+      tslib: 2.4.0
+    dev: true
+
+  /@babylonjs/inspector/5.8.2:
+    resolution: {integrity: sha512-kHfCu/1SjjvwPDpWdSa5Uru1N7rW5NtWINm15yp78ll0W/9isHjUs/y2IFqrQ7xTZKLFOUfmJmRONf3l25k46w==}
+    peerDependencies:
+      '@types/react': '>=16.7.3'
+      '@types/react-dom': '>=16.0.9'
+    dependencies:
+      '@babylonjs/core': 5.8.2
+      '@babylonjs/gui': 5.8.2
+      '@babylonjs/gui-editor': 5.8.2
+      '@babylonjs/loaders': 5.8.2
+      '@babylonjs/materials': 5.8.2
+      '@babylonjs/serializers': 5.8.2
+      '@fortawesome/fontawesome-svg-core': 6.1.1
+      '@fortawesome/free-regular-svg-icons': 6.1.1
+      '@fortawesome/free-solid-svg-icons': 6.1.1
+    dev: true
+
+  /@babylonjs/loaders/5.8.2:
+    resolution: {integrity: sha512-2H+tbdY0vQUboveO5rIGyffZnc0tfxQVd/0/iyuomM16d3jWnCXulUiYtykSzFmGgWqPIAx2eWmR0QuGxwMVMQ==}
+    dependencies:
+      '@babylonjs/core': 5.8.2
+      babylonjs-gltf2interface: 5.8.2
+      tslib: 2.4.0
+    dev: true
+
   /@babylonjs/materials/5.8.0:
     resolution: {integrity: sha512-jXP6xFzhctt3zi7JSpLN0FM38P/BO6xfWFN+odnCcA+RZm66Pm9QhcCU3m6vbn/8fZuj3/u2HUve0LusdBr9XQ==}
     dependencies:
       '@babylonjs/core': 5.8.0
       tslib: 2.4.0
+    dev: true
+
+  /@babylonjs/materials/5.8.2:
+    resolution: {integrity: sha512-Q24tkt9ysPRtdUeZDoB6DnbJR7IqBwtTvVrxf3cujwB+A6espVjAr0fLWjhi0ZH6TYDFMh3nhiDcGClaIOXhyw==}
+    dependencies:
+      '@babylonjs/core': 5.8.2
+      tslib: 2.4.0
+    dev: true
+
+  /@babylonjs/serializers/5.8.2:
+    resolution: {integrity: sha512-Rd8kxntCAUu2dAUv8V/E7KNZjYy9zfZrvvlo8y580SpLWQlz60JZps3UwK7aCyJTnkYrLXrMqoVdnDCuW4m8TA==}
+    dependencies:
+      '@babylonjs/core': 5.8.2
+      babylonjs-gltf2interface: 5.8.2
+      tslib: 2.4.0
+    dev: true
+
+  /@fortawesome/fontawesome-common-types/6.1.1:
+    resolution: {integrity: sha512-wVn5WJPirFTnzN6tR95abCx+ocH+3IFLXAgyavnf9hUmN0CfWoDjPT/BAWsUVwSlYYVBeCLJxaqi7ZGe4uSjBA==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dev: true
+
+  /@fortawesome/fontawesome-svg-core/6.1.1:
+    resolution: {integrity: sha512-NCg0w2YIp81f4V6cMGD9iomfsIj7GWrqmsa0ZsPh59G7PKiGN1KymZNxmF00ssuAlo/VZmpK6xazsGOwzKYUMg==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.1.1
+    dev: true
+
+  /@fortawesome/free-regular-svg-icons/6.1.1:
+    resolution: {integrity: sha512-xXiW7hcpgwmWtndKPOzG+43fPH7ZjxOaoeyooptSztGmJxCAflHZxXNK0GcT0uEsR4jTGQAfGklDZE5NHoBhKg==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.1.1
+    dev: true
+
+  /@fortawesome/free-solid-svg-icons/6.1.1:
+    resolution: {integrity: sha512-0/5exxavOhI/D4Ovm2r3vxNojGZioPwmFrKg0ZUH69Q68uFhFPs6+dhAToh6VEQBntxPRYPuT5Cg1tpNa9JUPg==}
+    engines: {node: '>=6'}
+    requiresBuild: true
+    dependencies:
+      '@fortawesome/fontawesome-common-types': 6.1.1
+    dev: true
+
+  /babylonjs-gltf2interface/5.8.2:
+    resolution: {integrity: sha512-oRlMw31+MwIk6btEAIP36NFqUouqWV8oWYl+C7+f+8tvTiZBwC3Kh7qEL2hADhuCcppPTcycQgNtaeHCDYoEjg==}
     dev: true
 
   /esbuild-android-64/0.14.42:
