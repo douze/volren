@@ -1,86 +1,110 @@
-import { ArcRotateCamera, Effect, Engine, HemisphericLight, Mesh, MeshBuilder, RawTexture, RawTexture3D, Scene, ShaderMaterial, Texture, Vector3 } from "@babylonjs/core";
+import { ArcRotateCamera, AxesViewer, Engine, HemisphericLight, Mesh, RawTexture3D, Scene, ShaderMaterial, Texture, Vector3, VertexData } from "@babylonjs/core";
 import "@babylonjs/inspector";
+import './shadersStore';
 import './style.css';
 
 class App {
+
+  private engine: Engine;
+  private scene: Scene;
+  private camera: ArcRotateCamera;
+
+  private file: String = "bonsai_256x256x256_uint8.raw";
+
   constructor() {
-    const canvas = document.querySelector<HTMLCanvasElement>('#renderCanvas')!
+    const canvas: HTMLCanvasElement = document.querySelector<HTMLCanvasElement>('#renderCanvas')!
 
-    const engine = new Engine(canvas, true);
-    const scene = new Scene(engine);
-    scene.debugLayer.show({
+    this.engine = new Engine(canvas, true);
+    this.scene = new Scene(this.engine);
+    this.scene.debugLayer.show();
 
-    });
+    this.camera = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, -2, new Vector3(0.5, 0.5, 0), this.scene);
+    this.camera.attachControl(canvas, true);
+    this.camera.wheelPrecision = 20;
 
-    const camera: ArcRotateCamera = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 1.5, -10, Vector3.Zero(), scene);
-    camera.setTarget(Vector3.Zero());
-    camera.attachControl(canvas, true);
-
-    const light: HemisphericLight = new HemisphericLight("light", new Vector3(0, 1, 0), scene);
+    const light: HemisphericLight = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
     light.intensity = 0.7;
+  }
 
-    const box: Mesh = MeshBuilder.CreateBox("box", { size: 5 }, scene);
+  private createSimpleBox(): Mesh {
+    const box: Mesh = new Mesh("box", this.scene);
 
-     let data = new Float32Array([
-      1.0,0.0,0.0,
-      1.0,0.0,0.0,
-      1.0,0.0,0.0,
-      1.0,0.0,0.0,
-      
-      0.0,0.0,1.0,
-      0.0,0.0,1.0,
-      0.0,0.0,1.0,
-      0.0,0.0,1.0
-    ]);
+    const positions: number[] = [0, 0, 0,
+      1, 0, 0,
+      1, 1, 0,
+      0, 1, 0,
 
-    const texture: RawTexture3D = new RawTexture3D(data, 2, 2, 2, Engine.TEXTUREFORMAT_RGB, scene, true, false, Texture.NEAREST_SAMPLINGMODE, Engine.TEXTURETYPE_FLOAT);
-  
-    Effect.ShadersStore["customVertexShader"] = `
-      precision highp float;
-  
-      attribute vec3 position;
-      attribute vec2 uv;
-      uniform mat4 worldViewProjection;
+      0, 0, 1,
+      1, 0, 1,
+      1, 1, 1,
+      0, 1, 1];
+    const indices: number[] = [0, 1, 2, 0, 2, 3,
+      1, 5, 6, 1, 6, 2,
+      5, 4, 7, 5, 7, 6,
+      4, 0, 3, 4, 3, 7,
+      3, 2, 6, 3, 6, 7,
+      4, 5, 1, 4, 1, 0];
 
-      varying vec2 vUV;
+    const vertexData: VertexData = new VertexData();
+    vertexData.positions = positions;
+    vertexData.indices = indices;
+    vertexData.applyToMesh(box);
 
-      void main(void) {
-        gl_Position = worldViewProjection * vec4(position, 1.0);
-        vUV = uv;
-      }`;
+    return box;
+  }
 
-    Effect.ShadersStore["customFragmentShader"] = `
-      precision highp float; 
-      precision highp sampler3D;
+  private loadVolume(onload: (dataBuffer: Uint8Array) => void): void {
+    const request: XMLHttpRequest = new XMLHttpRequest();
+    request.open("GET", "http://localhost:8080/" + this.file, true);
+    request.responseType = "arraybuffer";
+    request.onload = () => {
+      const response: ArrayBuffer = request.response as ArrayBuffer;
+      onload(new Uint8Array(response));
+    };
+    request.send();
+  }
 
-      varying vec2 vUV; 
-      uniform sampler3D textureData;
+  private createTexture(dataBuffer: Uint8Array, volumeDimensions: number[]): RawTexture3D {
+    const texture: RawTexture3D = new RawTexture3D(dataBuffer, volumeDimensions[0], volumeDimensions[1], volumeDimensions[2],
+      Engine.TEXTUREFORMAT_R, this.scene, false, false, Texture.BILINEAR_SAMPLINGMODE, Engine.TEXTURETYPE_UNSIGNED_BYTE);
+    texture.wrapU = Texture.CLAMP_ADDRESSMODE;
+    texture.wrapV = Texture.CLAMP_ADDRESSMODE;
+    texture.wrapR = Texture.CLAMP_ADDRESSMODE;
+    return texture;
+  }
 
-      void main(void) { 
-        gl_FragColor = vec4(vUV, 0, 1);
-        gl_FragColor = texture(textureData, vec3(vUV, vUV.x));
-      }`;
-
-    const shaderMaterial = new ShaderMaterial(
-      "shader",
-      scene,
-      {
-        vertex: "custom",
-        fragment: "custom",
-      },
+  private createMaterial(texture: RawTexture3D): ShaderMaterial {
+    const material: ShaderMaterial = new ShaderMaterial("volumetric", this.scene, { vertex: "volumetric", fragment: "volumetric", },
       {
         attributes: ["position", "normal", "uv"],
-        uniforms: ["world", "worldView", "worldViewProjection", "view", "projection", "proj_view", "eye_pos", "volume_scale", "textureData"],
+        uniforms: ["worldViewProjection", "textureData", "cameraPosition"],
       },
     );
-    //shaderMaterial.cullBackFaces = false;
-    shaderMaterial.setTexture("textureData", texture);
+    material.cullBackFaces = false;
+    material.setTexture("textureData", texture);
 
-    box.material = shaderMaterial;
+    return material;
+  }
 
-    engine.runRenderLoop(() => {
-      scene.render();
+  public start() {
+    this.loadVolume((dataBuffer) => {
+      new AxesViewer(this.scene, 1.0);
+      const box = this.createSimpleBox();
+
+      const volumeDimensions = [256, 256, 256];
+      const texture: RawTexture3D = this.createTexture(dataBuffer, volumeDimensions);
+      const material: ShaderMaterial = this.createMaterial(texture);
+
+      box.material = material;
+
+      this.scene.registerBeforeRender(() => {
+        material.setVector3("cameraPosition", this.camera.position);
+      });
+
+      this.engine.runRenderLoop(() => {
+        this.scene.render();
+      });
     });
   }
 }
-new App();
+new App().start();
