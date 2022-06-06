@@ -25,7 +25,7 @@ Effect.ShadersStore["volumetricFragmentShader"] = `
     varying vec3 vCameraDirection;
 
     // slab method -- https://tavianator.com/2011/ray_box.html
-    vec2 intersect_box(vec3 orig, vec3 dir) {
+    vec2 intersectBox(vec3 orig, vec3 dir) {
       const vec3 box_min = vec3(0);
       const vec3 box_max = vec3(1);
       vec3 inv_dir = 1.0 / dir;
@@ -42,16 +42,16 @@ Effect.ShadersStore["volumetricFragmentShader"] = `
       vec4 color;
 
       vec3 rayDirection = normalize(vCameraDirection);
-      vec2 hit = intersect_box(cameraPosition, rayDirection);
+      vec2 hit = intersectBox(cameraPosition, rayDirection);
 
-      vec3 volume_dims = vec3(256);
-      vec3 dt_vec = 1.0 / (vec3(volume_dims) * abs(rayDirection));
-      float dt = min(dt_vec.x, min(dt_vec.y, dt_vec.z));
+      vec3 volumeDimensions = vec3(256);
+      vec3 dtVector = 1.0 / (vec3(volumeDimensions) * abs(rayDirection));
+      float dt = min(dtVector.x, min(dtVector.y, dtVector.z));
 
       vec3 point = cameraPosition + (hit.x + dt) * rayDirection;
       for (float t = hit.x; t < hit.y; t += dt) {
         vec4 pointColor = vec4(texture(textureData, point).r);
-        color.rgb = (1.0 - color.a) * pointColor.a * pointColor.rgb;
+        color.rgb += (1.0 - color.a) * pointColor.a * pointColor.rgb;
         color.a += (1.0 - color.a) * pointColor.a;
         point += rayDirection * dt;
       }
