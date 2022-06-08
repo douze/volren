@@ -2,7 +2,7 @@ import { ArcRotateCamera, AxesViewer, Engine, HemisphericLight, Mesh, RawTexture
 import "@babylonjs/inspector";
 import './shadersStore';
 import './style.css';
-import { VolumetricRawSceneLoader } from "./volumetricRawSceneLoader";
+import { VolumeRawSceneLoader } from "./volumeRawSceneLoader";
 
 class App {
 
@@ -17,7 +17,7 @@ class App {
     this.scene = new Scene(this.engine);
     this.scene.debugLayer.show();
 
-    SceneLoader.RegisterPlugin(new VolumetricRawSceneLoader());
+    SceneLoader.RegisterPlugin(new VolumeRawSceneLoader());
 
     this.camera = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, -2, new Vector3(0.5, 0.5, 0), this.scene);
     this.camera.attachControl(canvas, true);
@@ -55,7 +55,7 @@ class App {
   }
 
   private createMaterial(texture: RawTexture3D): ShaderMaterial {
-    const material: ShaderMaterial = new ShaderMaterial("volumetric", this.scene, { vertex: "volumetric", fragment: "volumetric", },
+    const material: ShaderMaterial = new ShaderMaterial("volume", this.scene, { vertex: "volume", fragment: "volume", },
       {
         attributes: ["position", "normal", "uv"],
         uniforms: ["worldViewProjection", "textureData", "cameraPosition"],

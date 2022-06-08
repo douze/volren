@@ -1,8 +1,8 @@
 import { ISceneLoaderPlugin, Scene, AbstractMesh, IParticleSystem, Skeleton, RawTexture3D, Engine, Texture, AssetContainer, ISceneLoaderPluginExtensions } from "@babylonjs/core";
 
-export class VolumetricRawSceneLoader implements ISceneLoaderPlugin {
+export class VolumeRawSceneLoader implements ISceneLoaderPlugin {
 
-  public name = "Volumetric .raw scene loader";
+  public name = "Volume .raw scene loader";
   public extensions: ISceneLoaderPluginExtensions = { ".raw": { isBinary: true } }
 
   importMesh(meshesNames: any, scene: Scene, data: any, rootUrl: string, meshes: AbstractMesh[], particleSystems: IParticleSystem[], skeletons: Skeleton[], onError?: (message: string, exception?: any) => void): boolean {
