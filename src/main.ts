@@ -1,4 +1,5 @@
 import { ArcRotateCamera, AxesViewer, Engine, HemisphericLight, Mesh, RawTexture3D, Scene, SceneLoader, ShaderMaterial, Texture, Vector3, VertexData } from "@babylonjs/core";
+import { renderableTextureFormatToIndex } from "@babylonjs/core/Engines/WebGPU/webgpuTextureHelper";
 import "@babylonjs/inspector";
 import './shadersStore';
 import './style.css';
@@ -11,7 +12,7 @@ class App {
   private camera: ArcRotateCamera;
 
   constructor() {
-    const canvas: HTMLCanvasElement = document.querySelector<HTMLCanvasElement>('#renderCanvas')!
+    let canvas: HTMLCanvasElement = document.querySelector<HTMLCanvasElement>('#renderCanvas')!;
 
     this.engine = new Engine(canvas, true);
     this.scene = new Scene(this.engine);
@@ -25,6 +26,57 @@ class App {
 
     const light: HemisphericLight = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
     light.intensity = 0.7;
+
+    /**/
+
+    canvas = document.querySelector<HTMLCanvasElement>('#controlCanvas')!;
+    const ctx: CanvasRenderingContext2D = canvas.getContext('2d') as CanvasRenderingContext2D;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    let marker = {
+      cx: 150,
+      cy: 75,
+      dragging: false,
+      draw: (cx, cy) => {
+        ctx.beginPath();
+        ctx.moveTo(cx, cy + 20);
+        ctx.lineTo(cx - 15, cy);
+        ctx.lineTo(cx + 15, cy);
+        ctx.closePath();
+        ctx.stroke();
+      },
+      isinpath: (x, y,) => {
+        return ctx.isPointInPath(x, y);
+      }
+    }
+
+    animate();
+
+    canvas.addEventListener("mousemove", (e) => {
+      if (marker.dragging) {
+        marker.cx = e.offsetX;
+        marker.cy = e.offsetY;
+      }
+    });
+
+    canvas.addEventListener("mousedown", (e) => {
+      marker.dragging = marker.isinpath(e.offsetX, e.offsetY);
+    });
+
+    canvas.addEventListener("mouseup", (e) => {
+      marker.dragging = false;
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      render();
+    }
+
+    function render() {
+      marker.draw(marker.cx, marker.cy);
+    }
   }
 
   private createSimpleBox(): Mesh {
