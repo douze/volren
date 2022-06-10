@@ -1,5 +1,4 @@
-import { ArcRotateCamera, AxesViewer, Engine, HemisphericLight, Mesh, RawTexture3D, Scene, SceneLoader, ShaderMaterial, Texture, Vector3, VertexData } from "@babylonjs/core";
-import { renderableTextureFormatToIndex } from "@babylonjs/core/Engines/WebGPU/webgpuTextureHelper";
+import { ArcRotateCamera, AxesViewer, Engine, HemisphericLight, Mesh, RawTexture3D, Scene, SceneLoader, ShaderMaterial, Vector3, VertexData } from "@babylonjs/core";
 import "@babylonjs/inspector";
 import './shadersStore';
 import './style.css';
@@ -34,6 +33,105 @@ class App {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // create gradient/rect for colormap
+
+    const colormapHeight = 100;
+    const colormapWidth = 400;
+    const colormapOrigin = 20;
+    var gradient = ctx.createLinearGradient(colormapOrigin, 0, colormapOrigin + colormapWidth, 0);
+
+    let randomColor = () => {
+      return "rgb(" + Math.round(Math.random() * 255) + "," + Math.round(Math.random() * 255) + "," + Math.round(Math.random() * 255) + ")";
+    };
+
+    let colorStops = [
+      { offset: 0, color: randomColor() }
+    ];
+
+    // https://www.kennethmoreland.com/color-advice/
+    colorStops = [ // inferno
+      { offset: 0 / 7, color: 'rgb(0,0,4)' },
+      { offset: 1 / 7, color: 'rgb(40,11,84)' },
+      { offset: 2 / 7, color: 'rgb(101,21,110)' },
+      { offset: 3 / 7, color: 'rgb(159,42,99)' },
+      { offset: 4 / 7, color: 'rgb(212,72,66)' },
+      { offset: 5 / 7, color: 'rgb(245,125,21)' },
+      { offset: 6 / 7, color: 'rgb(250,193,39)' },
+      { offset: 7 / 7, color: 'rgb(252,255,164)' },
+    ];
+
+    console.log(JSON.stringify(colorStops));
+
+    colorStops = [ // test
+      { offset: 0/4, color: 'rgb(0,0,0)' },
+      { offset: 1/4, color: 'rgb(255,0,0)' },
+      { offset: 2/4, color: 'rgb(0,255,0)' },
+      { offset: 3/4, color: 'rgb(0,0,255)' },
+      { offset: 4/4, color: 'rgb(0,0,0)' },
+    ];
+
+    colorStops.forEach(cs => gradient.addColorStop(cs.offset, cs.color));
+
+    colorStops.forEach((cs,idx) => {
+      let xorig = colormapOrigin + (cs.offset * colormapWidth);
+      // add marker
+      ctx.beginPath();
+      ctx.moveTo(xorig, colormapOrigin);
+      ctx.lineTo(xorig - 5, colormapOrigin - 10);
+      ctx.lineTo(xorig + 5, colormapOrigin - 10);
+      ctx.closePath();
+      ctx.stroke();
+    });
+
+    // Set the fill style and draw a rectangle
+    ctx.fillStyle = gradient;
+    ctx.fillRect(colormapOrigin, colormapOrigin, colormapWidth, colormapHeight);
+    ctx.strokeRect(colormapOrigin, colormapOrigin, colormapWidth, colormapHeight);
+
+    let button: HTMLButtonElement = document.querySelector<HTMLButtonElement>('#addMarkerButton')!;
+    button.addEventListener("click", () => {
+      var gradient = ctx.createLinearGradient(colormapOrigin, 0, colormapOrigin + colormapWidth, 0);
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      colorStops.push({ offset: 1, color: randomColor() });
+
+      // current length
+      let l = colorStops.length;
+      let pad = 1 / (l - 1);
+
+      console.log('current length : ' + l);
+      console.log('pad between markers : ' + pad);
+
+      colorStops.forEach((val, ind) => val.offset = ind * pad);
+      colorStops.forEach(cs => gradient.addColorStop(cs.offset, cs.color));
+
+
+    colorStops.forEach((cs,idx) => {
+      let xorig = colormapOrigin + (cs.offset * colormapWidth);
+      // add marker
+      ctx.beginPath();
+      ctx.moveTo(xorig, colormapOrigin);
+      ctx.lineTo(xorig - 5, colormapOrigin - 10);
+      ctx.lineTo(xorig + 5, colormapOrigin - 10);
+      ctx.closePath();
+      ctx.stroke();
+    });
+
+
+     
+
+      console.log(JSON.stringify(colorStops));
+
+      // Set the fill style and draw a rectangle
+      ctx.fillStyle = gradient;
+      ctx.fillRect(colormapOrigin, colormapOrigin, colormapWidth, colormapHeight);
+      ctx.strokeRect(colormapOrigin, colormapOrigin, colormapWidth, colormapHeight);
+
+    });
+
+    // marker
+
     let marker = {
       cx: 150,
       cy: 75,
@@ -51,7 +149,7 @@ class App {
       }
     }
 
-    animate();
+    // animate();
 
     canvas.addEventListener("mousemove", (e) => {
       if (marker.dragging) {
