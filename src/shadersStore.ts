@@ -19,7 +19,8 @@ Effect.ShadersStore["volumeFragmentShader"] = `
     precision highp float; 
     precision highp sampler3D;
 
-    uniform sampler3D textureData;
+    uniform sampler3D volumeTexture;
+    uniform sampler2D colorMapTexture;
     uniform vec3 cameraPosition;
 
     varying vec3 vCameraDirection;
@@ -62,8 +63,8 @@ Effect.ShadersStore["volumeFragmentShader"] = `
 
       vec3 point = cameraPosition + (hit.x + dt) * rayDirection;
       for (float t = hit.x; t < hit.y; t += dt) {
-        float dataValue = texture(textureData, point).r;
-        vec4 pointColor = vec4(infernoColormap(dataValue), dataValue);
+        float dataValue = texture(volumeTexture, point).r;
+        vec4 pointColor = vec4(texture(colorMapTexture, vec2(dataValue, 0.5)).rgb, dataValue);
         // Front to back blending
         color.rgb += (1.0 - color.a) * pointColor.a * pointColor.rgb;
         color.a += (1.0 - color.a) * pointColor.a;
