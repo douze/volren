@@ -1,5 +1,8 @@
 import { ISceneLoaderPlugin, Scene, AbstractMesh, IParticleSystem, Skeleton, RawTexture3D, Engine, Texture, AssetContainer, ISceneLoaderPluginExtensions } from "@babylonjs/core";
 
+/**
+ * Scene loader for volume raw data.
+ */
 export class VolumeRawSceneLoader implements ISceneLoaderPlugin {
 
   public name = "Volume .raw scene loader";
@@ -20,6 +23,9 @@ export class VolumeRawSceneLoader implements ISceneLoaderPlugin {
     return container;
   }
 
+  /**
+   * Create a 3D texture from the loaded volume data.
+   */
   private createTexture3D(scene: Scene, data: ArrayBuffer): RawTexture3D {
     const volumeDimensions: number[] = [256, 256, 256];
 

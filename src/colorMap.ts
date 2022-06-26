@@ -30,14 +30,21 @@ export class ColorMap {
         // Canvas size is increased in order to encompass the markers
         this.positionOffset = 10;
         this.canvas = document.querySelector<HTMLCanvasElement>("#" + canvasId)!;
+        this.canvas = document.createElement("canvas");
+        this.canvas.setAttribute("id", "colorMap");
         this.canvas.setAttribute("width", String(width + this.positionOffset * 2));
         this.canvas.setAttribute("height", String(height + this.positionOffset * 2));
+        this.canvas.style.top = "20px";
+        this.canvas.style.right = "20px";
+        this.canvas.style.position = "absolute";
+        console.log(this.canvas.style);
         this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
+        document.body.append(this.canvas);
 
         // Offscreen canvas is used for dynamic texture (full size, no markers)
         this.offscreenCanvas = document.createElement("canvas");
-        this.offscreenCanvas.setAttribute("width", this.canvas.width.toString());
-        this.offscreenCanvas.setAttribute("height", this.canvas.height.toString());
+        this.offscreenCanvas.style.width = this.canvas.width.toString();
+        this.offscreenCanvas.style.height = this.canvas.height.toString();
         this.offscreenContext = this.offscreenCanvas.getContext("2d") as CanvasRenderingContext2D;
         this.canvas.append(this.offscreenCanvas);
 
@@ -135,7 +142,6 @@ export class ColorMap {
         // Draw gradient to offscreen canvas
         this.offscreenContext.fillStyle = this.gradient;
         this.offscreenContext.fillRect(0, 0, this.offscreenCanvas.width, this.offscreenCanvas.height);
-        this.offscreenContext.strokeRect(0, 0, this.offscreenCanvas.width, this.offscreenCanvas.height);
 
         // Copy it to visible canvas
         this.context.drawImage(this.offscreenCanvas, this.positionOffset, this.positionOffset, this.width, this.height);

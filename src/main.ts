@@ -1,33 +1,43 @@
-import { ArcRotateCamera, AxesViewer, DynamicTexture, Engine, HemisphericLight, Mesh, MeshBuilder, RawTexture3D, Scene, SceneLoader, ShaderMaterial, StandardMaterial, Vector2, Vector3, VertexData } from "@babylonjs/core";
+import { ArcRotateCamera, Color4, DynamicTexture, Engine, HemisphericLight, Mesh, RawTexture3D, Scene, SceneLoader, ShaderMaterial, Vector3, VertexData } from "@babylonjs/core";
 import "@babylonjs/inspector";
 import { ColorMap } from "./colorMap";
 import './shadersStore';
 import './style.css';
 import { VolumeRawSceneLoader } from "./volumeRawSceneLoader";
 
+/**
+ * Entry point of the main application.
+ */
 class App {
 
   private engine: Engine;
   private scene: Scene;
   private camera: ArcRotateCamera;
 
+  /**
+   * Create the whole rendering pipeline.
+   */
   constructor() {
     let canvas: HTMLCanvasElement = document.querySelector<HTMLCanvasElement>('#renderCanvas')!;
 
     this.engine = new Engine(canvas, true);
     this.scene = new Scene(this.engine);
-    this.scene.debugLayer.show();
+    this.scene.clearColor = new Color4(1.0, 1.0, 1.0, 1.0);
 
     SceneLoader.RegisterPlugin(new VolumeRawSceneLoader());
 
     this.camera = new ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, -2, new Vector3(0.5, 0.5, 0), this.scene);
     this.camera.attachControl(canvas, true);
     this.camera.wheelPrecision = 120;
+    this.camera.minZ = 0.1;
 
     const light: HemisphericLight = new HemisphericLight("light", new Vector3(0, 1, 0), this.scene);
     light.intensity = 0.7;
   }
 
+  /**
+   * Create a simple box without any custom attributes.
+   */
   private createSimpleBox(): Mesh {
     const box: Mesh = new Mesh("box", this.scene);
 
@@ -55,6 +65,11 @@ class App {
     return box;
   }
 
+  /**
+   * Create the material for the volume rendering.
+   * @param volumeTexture texture to gather volume data
+   * @param colorMapTexture texture for transfert function
+   */
   private createMaterial(volumeTexture: RawTexture3D, colorMapTexture: DynamicTexture): ShaderMaterial {
     const material: ShaderMaterial = new ShaderMaterial("volume", this.scene, { vertex: "volume", fragment: "volume", },
       {
@@ -69,6 +84,9 @@ class App {
     return material;
   }
 
+  /**
+   * Load the asset then create the full scene.
+   */
   public start() {
     const bonsaiFilename: string = "bonsai_256x256x256_uint8.raw";
     SceneLoader.LoadAssetContainer("./", bonsaiFilename, this.scene, (container) => {
@@ -92,7 +110,6 @@ class App {
 
       const material: ShaderMaterial = this.createMaterial(volumeTexture, colorMapTexture);
 
-      new AxesViewer(this.scene, 1.0);
       const box = this.createSimpleBox();
       box.material = material;
 
