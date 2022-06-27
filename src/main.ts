@@ -94,16 +94,7 @@ class App {
       volumeTexture.name = bonsaiFilename;
 
       const colorMap: ColorMap = new ColorMap("controlCanvas", 400, 100);
-      // inferno 
-      colorMap.setColors([
-        "#000004",
-        "#280b54",
-        "#651565",
-        "#9f2a63",
-        "#d44842",
-        "#f57d15",
-        "#fac127",
-        "#fcffa4"]);
+      // other color maps to implement : 
 
       const colorMapTexture: DynamicTexture = new DynamicTexture("Color map", colorMap.getCanvas());
       colorMap.onUpdate = () => colorMapTexture.update();
