@@ -8,15 +8,18 @@ export class VolumeRawSceneLoader implements ISceneLoaderPlugin {
   public name = "Volume .raw scene loader";
   public extensions: ISceneLoaderPluginExtensions = { ".raw": { isBinary: true } }
 
+   //@ts-ignore
   importMesh(meshesNames: any, scene: Scene, data: any, rootUrl: string, meshes: AbstractMesh[], particleSystems: IParticleSystem[], skeletons: Skeleton[], onError?: (message: string, exception?: any) => void): boolean {
     throw new Error("Method not implemented.");
   }
 
+   //@ts-ignore
   load(scene: Scene, data: any, rootUrl: string, onError?: (message: string, exception?: any) => void): boolean {
     this.createTexture3D(scene, data);
     return true;
   }
 
+   //@ts-ignore
   loadAssetContainer(scene: Scene, data: any, rootUrl: string, onError?: (message: string, exception?: any) => void): AssetContainer {
     const container = new AssetContainer(scene);
     container.textures.push(this.createTexture3D(scene, data));

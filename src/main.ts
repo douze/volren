@@ -1,5 +1,4 @@
 import { ArcRotateCamera, Color4, DynamicTexture, Engine, HemisphericLight, Mesh, RawTexture3D, Scene, SceneLoader, ShaderMaterial, Vector3, VertexData } from "@babylonjs/core";
-import "@babylonjs/inspector";
 import { ColorMap } from "./colorMap";
 import './shadersStore';
 import './style.css';

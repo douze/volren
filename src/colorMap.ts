@@ -7,11 +7,11 @@
 export class ColorMap {
 
     private positionOffset: number; // for the pasted canvas content
-    private canvas: HTMLCanvasElement;
-    private offscreenCanvas: HTMLCanvasElement;
-    private context: CanvasRenderingContext2D;
-    private offscreenContext: CanvasRenderingContext2D;
-    private colorPicker: HTMLInputElement;
+    private canvas!: HTMLCanvasElement;
+    private offscreenCanvas!: HTMLCanvasElement;
+    private context!: CanvasRenderingContext2D;
+    private offscreenContext!: CanvasRenderingContext2D;
+    private colorPicker!: HTMLInputElement;
     private width: number;
     private height: number;
     private gradient: CanvasGradient;
