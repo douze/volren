@@ -3,7 +3,7 @@
 ![BabylonJS](https://img.shields.io/badge/-BabylonJS-grey?logo=WebGL&logoColor=white)
 ![license](https://img.shields.io/github/license/douze/volren?color=blue&label=license)
 ![continuous integration](https://img.shields.io/github/actions/workflow/status/douze/volren/continuous-integration.yml)
-
+![status](https://img.shields.io/badge/status-inative-yellowgreen)
 
 **Vol**ume **Ren**dering is a [BabylonJS](https://www.babylonjs.com/) implementation of  [Will Usher article](https://www.willusher.io/webgl/2019/01/13/volume-rendering-with-webgl) about volume rendering.
 
