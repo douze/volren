@@ -9,7 +9,7 @@
 
 This project is mainly used to discover BabylonJS and volume rendering.
 
-![Preview](images/volren.png)
+![Preview](volren.png)
 
 ## Controls
 * MB1 (viewer): rotate
